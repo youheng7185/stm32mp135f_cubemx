@@ -35,6 +35,15 @@
 		ranges;
 
 		/* USER CODE BEGIN reserved-memory */
+//		optee@dd000000 {
+//			reg = <0xdd000000 0x3000000>;
+//			no-map;
+//		};
+
+		optee@de000000 {
+		    reg = <0xde000000 0x02000000>;  // 32MB
+		    no-map;
+		};
 		/* USER CODE END reserved-memory */
 	};
 

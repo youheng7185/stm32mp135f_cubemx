@@ -51,6 +51,18 @@
 
 &pinctrl {
 
+	rtc_pins_mx: rtc_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('C', 13, ANALOG)>; /* RTC_OUT1 */
+		};
+	};
+
+	rtc_sleep_pins_mx: rtc_sleep_mx-0 {
+		pins {
+			pinmux = <STM32_PINMUX('C', 13, ANALOG)>; /* RTC_OUT1 */
+		};
+	};
+
 	/* USER CODE BEGIN pinctrl */
 	/* USER CODE END pinctrl */
 };
@@ -83,6 +95,16 @@
 
 	/* USER CODE BEGIN rcc */
 	/* USER CODE END rcc */
+};
+
+&rtc {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&rtc_pins_mx>;
+	pinctrl-1 = <&rtc_sleep_pins_mx>;
+	status = "okay";
+
+	/* USER CODE BEGIN rtc */
+	/* USER CODE END rtc */
 };
 
 /* USER CODE BEGIN addons */

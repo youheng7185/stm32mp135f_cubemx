@@ -42,10 +42,16 @@
 		ranges;
 
 		/* USER CODE BEGIN reserved-memory */
-		optee_framebuffer:optee-framebuffer@dd000000{
+		optee_framebuffer: optee-framebuffer@dd000000{
 			reg = <0xdd000000 0x1000000>;
 			st,protreg = <TZC_REGION_S_RDWR 0>;
-		};		
+		};
+
+//		optee@de000000 {
+//		    reg = <0xde000000 0x02000000>;  // 32MB
+//		    no-map;
+//		};
+		
 		/* USER CODE END reserved-memory */
 	};
 
@@ -75,6 +81,16 @@
 	    regulator-max-microvolt = <3300000>;
 	    regulator-always-on;
 	    vin-supply = <&vdd>;
+	};
+	
+	vddcore: regulator-vddcore {
+		compatible = "regulator-fixed";
+		regulator-name = "vddcore";
+
+		regulator-min-microvolt = <1350000>;
+		regulator-max-microvolt = <1350000>;
+
+		regulator-always-on;
 	};
 	
 	/* USER CODE END root */
@@ -362,6 +378,10 @@
     status = "okay";
     vdd-supply = <&vdd>;
     vdd_3v3_usbfs-supply = <&vdd_usb>;
+};
+
+&cpu0 {
+	cpu-supply = <&vddcore>;
 };
 
 &sdmmc1_io {

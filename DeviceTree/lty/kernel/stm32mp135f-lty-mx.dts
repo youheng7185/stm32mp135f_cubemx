@@ -26,6 +26,10 @@
 		reg = <0xc0000000 0x20000000>;
 
 		/* USER CODE BEGIN memory */
+		optee@dd000000 {
+			reg = <0xdd000000 0x3000000>;
+			no-map;
+		};
 		/* USER CODE END memory */
 	};
 
