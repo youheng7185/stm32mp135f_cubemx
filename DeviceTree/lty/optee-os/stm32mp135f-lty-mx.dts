@@ -17,6 +17,11 @@
 #include "stm32mp13xf.dtsi"
 
 /* USER CODE BEGIN includes */
+#include <dt-bindings/soc/stm32mp-provisioning.h>
+#include <dt-bindings/soc/stm32mp-tzc400-macro.h>
+#include <dt-bindings/soc/stm32mp13-tzc400.h>
+#include <dt-bindings/tamper/st,stm32mp13-tamp.h>
+#include "stm32mp13-pinctrl.dtsi"
 /* USER CODE END includes */
 
 / {
@@ -37,10 +42,41 @@
 		ranges;
 
 		/* USER CODE BEGIN reserved-memory */
+		optee_framebuffer:optee-framebuffer@dd000000{
+			reg = <0xdd000000 0x1000000>;
+			st,protreg = <TZC_REGION_S_RDWR 0>;
+		};		
 		/* USER CODE END reserved-memory */
 	};
 
 	/* USER CODE BEGIN root */
+
+	vdd: vdd {
+	    compatible = "regulator-fixed";
+	    regulator-name = "vdd";
+	    regulator-min-microvolt = <3300000>;
+	    regulator-max-microvolt = <3300000>;
+	    regulator-always-on;
+	};
+
+	vdd_adc: vdd_adc {
+	    compatible = "regulator-fixed";
+	    regulator-name = "vdd_adc";
+	    regulator-min-microvolt = <3300000>;
+	    regulator-max-microvolt = <3300000>;
+	    regulator-always-on;
+	    vin-supply = <&vdd>;
+	};
+
+	vdd_usb: vdd_usb {
+	    compatible = "regulator-fixed";
+	    regulator-name = "vdd_usb";
+	    regulator-min-microvolt = <3300000>;
+	    regulator-max-microvolt = <3300000>;
+	    regulator-always-on;
+	    vin-supply = <&vdd>;
+	};
+	
 	/* USER CODE END root */
 
 	clocks {
@@ -57,6 +93,7 @@
 			status = "disabled";
 
 			/* USER CODE BEGIN clk_lse */
+		    clock-frequency = <32768>;
 			/* USER CODE END clk_lse */
 		};
 		clk_hse: clk-hse {
@@ -138,6 +175,7 @@
 	status = "okay";
 
 	/* USER CODE BEGIN iwdg1 */
+	timeout-sec = <32>;
 	/* USER CODE END iwdg1 */
 };
 
@@ -308,6 +346,7 @@
 	status = "okay";
 
 	/* USER CODE BEGIN rng */
+	clock-error-detect;
 	/* USER CODE END rng */
 };
 
@@ -319,39 +358,22 @@
 };
 
 /* USER CODE BEGIN addons */
-
-aliases {
-    serial0 = &uart4;
+&pwr_regulators {
+    status = "okay";
+    vdd-supply = <&vdd>;
+    vdd_3v3_usbfs-supply = <&vdd_usb>;
 };
 
-chosen {
-    stdout-path = "serial0:115200n8";
+&sdmmc1_io {
+    vddsd1-supply = <&vdd>;
 };
 
-vdd: vdd {
-    compatible = "regulator-fixed";
-    regulator-name = "vdd";
-    regulator-min-microvolt = <3300000>;
-    regulator-max-microvolt = <3300000>;
-    regulator-always-on;
+&sdmmc2_io {
+    vddsd1-supply = <&vdd>;
 };
 
-vdd_adc: vdd_adc {
-    compatible = "regulator-fixed";
-    regulator-name = "vdd_adc";
-    regulator-min-microvolt = <3300000>;
-    regulator-max-microvolt = <3300000>;
-    regulator-always-on;
-    vin-supply = <&vdd>;
-};
-
-vdd_usb: vdd_usb {
-    compatible = "regulator-fixed";
-    regulator-name = "vdd_usb";
-    regulator-min-microvolt = <3300000>;
-    regulator-max-microvolt = <3300000>;
-    regulator-always-on;
-    vin-supply = <&vdd>;
+&tzc400 {
+	memory-region = <&optee_framebuffer>;
 };
 
 &uart4 {
