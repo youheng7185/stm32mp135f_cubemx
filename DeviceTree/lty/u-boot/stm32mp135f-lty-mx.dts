@@ -231,5 +231,10 @@
     timeout-sec = <32>;
     status = "okay";
 };
+
+&etzpc {
+    bootph-all;
+    status = "okay";
+};
 /* USER CODE END addons */
 
