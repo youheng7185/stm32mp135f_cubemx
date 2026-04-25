@@ -240,16 +240,7 @@
 //	>;
 //};
 
-&iwdg1 {
-	timeout-sec = <32>;
-	status = "okay";
-};
-
 &rcc {
-	status = "okay";
-};
-
-&rng {
 	status = "okay";
 };
 

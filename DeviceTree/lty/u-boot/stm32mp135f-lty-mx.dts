@@ -296,11 +296,11 @@
 	};
 };
 
-&iwdg1 {
-    bootph-all;
-    timeout-sec = <32>;
-    status = "okay";
-};
+//&iwdg1 {
+//    bootph-all;
+//    timeout-sec = <32>;
+//    status = "okay";
+//};
 
 &etzpc {
     bootph-all;
