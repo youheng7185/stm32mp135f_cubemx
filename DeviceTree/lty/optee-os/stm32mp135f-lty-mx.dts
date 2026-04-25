@@ -47,6 +47,12 @@
 			st,protreg = <TZC_REGION_S_RDWR 0>;
 		};
 
+	    optee_memory: optee@de000000 {
+	        reg = <0xde000000 0x02000000>;
+	        no-map;
+	        st,protreg = <TZC_REGION_S_RDWR 0>;
+	    };
+	    
 //		optee@de000000 {
 //		    reg = <0xde000000 0x02000000>;  // 32MB
 //		    no-map;
@@ -65,13 +71,20 @@
 	    regulator-always-on;
 	};
 
+    vdd_io: vdd_io {
+        compatible = "regulator-fixed";
+        regulator-name = "vdd_io";
+        regulator-min-microvolt = <3300000>;
+        regulator-max-microvolt = <3300000>;
+        regulator-always-on;
+    };
+    
 	vdd_adc: vdd_adc {
 	    compatible = "regulator-fixed";
 	    regulator-name = "vdd_adc";
 	    regulator-min-microvolt = <3300000>;
 	    regulator-max-microvolt = <3300000>;
 	    regulator-always-on;
-	    vin-supply = <&vdd>;
 	};
 
 	vdd_usb: vdd_usb {
@@ -80,7 +93,6 @@
 	    regulator-min-microvolt = <3300000>;
 	    regulator-max-microvolt = <3300000>;
 	    regulator-always-on;
-	    vin-supply = <&vdd>;
 	};
 	
 	vddcore: regulator-vddcore {
@@ -92,6 +104,22 @@
 
 		regulator-always-on;
 	};
+	
+    vddsd1: vddsd1 {
+        compatible = "regulator-fixed";
+        regulator-name = "vddsd1";
+        regulator-min-microvolt = <3300000>;
+        regulator-max-microvolt = <3300000>;
+        regulator-always-on;
+    };
+
+    vddsd2: vddsd2 {
+        compatible = "regulator-fixed";
+        regulator-name = "vddsd2";
+        regulator-min-microvolt = <3300000>;
+        regulator-max-microvolt = <3300000>;
+        regulator-always-on;
+    };
 	
 	/* USER CODE END root */
 
@@ -321,8 +349,18 @@
 				hz = < 648000000 >;
 				st,clksrc = < CLK_MPU_PLL1P >;
 				st,pll = < &pll1_cfg1 >;
+				st,opp-default;
 			};
 			/* USER CODE BEGIN rcc_st-ck_mpu */
+			// add st,opp-default into cfg_1
+			/*
+			cfg_1 {
+				hz = < 648000000 >;
+				st,clksrc = < CLK_MPU_PLL1P >;
+				st,pll = < &pll1_cfg1 >;
+				st,opp-default;
+			};
+			 */
 			/* USER CODE END rcc_st-ck_mpu */
 		};
 
@@ -385,11 +423,11 @@
 };
 
 &sdmmc1_io {
-    vddsd1-supply = <&vdd>;
+    vddsd1-supply = <&vddsd1>;
 };
 
 &sdmmc2_io {
-    vddsd1-supply = <&vdd>;
+    vddsd2-supply = <&vddsd2>;
 };
 
 &tzc400 {
