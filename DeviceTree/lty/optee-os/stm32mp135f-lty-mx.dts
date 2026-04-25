@@ -101,8 +101,8 @@
 		compatible = "regulator-fixed";
 		regulator-name = "vddcore";
 
-		regulator-min-microvolt = <1350000>;
-		regulator-max-microvolt = <1350000>;
+		regulator-min-microvolt = <1250000>;
+		regulator-max-microvolt = <1250000>;	
 
 		regulator-always-on;
 	};

@@ -58,37 +58,37 @@
 	};
 	
 	vdd: vdd {
-			compatible = "regulator-fixed";
-			regulator-name = "vdd";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			regulator-always-on;
-		};
+		compatible = "regulator-fixed";
+		regulator-name = "vdd";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
 
-		vdd_usb: vdd_usb {
-			compatible = "regulator-fixed";
-			regulator-name = "vdd_usb";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			regulator-always-on;
-		};
+	vdd_usb: vdd_usb {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_usb";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
 
-		vdd_adc: vdd_adc {
-			compatible = "regulator-fixed";
-			regulator-name = "vdd_adc";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			regulator-always-on;
-		};
+	vdd_adc: vdd_adc {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_adc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
 
-		vddcore: vddcore {
-			compatible = "regulator-fixed";
-			regulator-name = "vddcore";
-			regulator-min-microvolt = <1350000>;
-			regulator-max-microvolt = <1350000>;
-			regulator-always-on;
-		};
-
+	vddcore: vddcore {
+		compatible = "regulator-fixed";
+		regulator-name = "vddcore";
+		regulator-min-microvolt = <1250000>;
+		regulator-max-microvolt = <1250000>;
+		regulator-always-on;
+	};
+		
 	/* USER CODE END root */
 
 	clocks{
