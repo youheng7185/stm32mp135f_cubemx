@@ -9,15 +9,36 @@
  */
 
 /* USER CODE BEGIN includes */
+#include "stm32mp13-u-boot.dtsi"
 /* USER CODE END includes */
 
 / {
 
 	/* USER CODE BEGIN root */
+	aliases {
+		mmc0 = &sdmmc1;
+	};
+	config {
+		u-boot,mmc-env-partition = "u-boot-env";
+	};
+	
+	fwu-mdata{
+		compatible = "u-boot,fwu-mdata-gpt";
+		fwu-mdata-store = <&sdmmc1>;
+	};
 	/* USER CODE END root */
 
 }; /*root*/
 
 /* USER CODE BEGIN addons */
+
+&uart4 {
+    bootph-all;
+};
+
+&sdmmc1 {
+    bootph-all;
+};
+
 /* USER CODE END addons */
 

@@ -42,10 +42,10 @@
 		ranges;
 
 		/* USER CODE BEGIN reserved-memory */
-		optee_framebuffer: optee-framebuffer@dd000000{
-			reg = <0xdd000000 0x1000000>;
-			st,protreg = <TZC_REGION_S_RDWR 0>;
-		};
+//		optee_framebuffer: optee-framebuffer@dd000000{
+//			reg = <0xdd000000 0x1000000>;
+//			st,protreg = <TZC_REGION_S_RDWR 0>;
+//		};
 
 	    optee_memory: optee@de000000 {
 	        reg = <0xde000000 0x02000000>;
@@ -430,9 +430,9 @@
     vddsd2-supply = <&vddsd2>;
 };
 
-&tzc400 {
-	memory-region = <&optee_framebuffer>;
-};
+//&tzc400 {
+//	memory-region = <&optee_framebuffer>;
+//};
 
 &uart4 {
     pinctrl-names = "default";

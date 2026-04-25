@@ -15,6 +15,7 @@
 #include "stm32mp13xf.dtsi"
 
 /* USER CODE BEGIN includes */
+#include "stm32mp135f-lty-mx-u-boot.dtsi"
 /* USER CODE END includes */
 
 / {
@@ -35,14 +36,88 @@
 		ranges;
 
 		/* USER CODE BEGIN reserved-memory */
-		optee@dd000000 {
-			reg = <0xdd000000 0x3000000>;
-			no-map;
-		};
+		optee@de000000 {
+	        reg = <0xde000000 0x02000000>;
+	        no-map;
+	    };
 		/* USER CODE END reserved-memory */
 	};
 
 	/* USER CODE BEGIN root */
+    aliases {
+        serial0 = &uart4;
+        mmc0 = &sdmmc1;
+    };
+
+    chosen {
+        stdout-path = "serial0:115200n8";
+    };	
+    
+    vdd: vdd {
+    	
+		compatible = "regulator-fixed";
+		regulator-name = "vdd";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	vdd_io: vdd_io {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_io";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+	
+	vdd_adc: vdd_adc {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_adc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	vdd_usb: vdd_usb {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_usb";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+	
+	vddcore: regulator-vddcore {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vddcore";
+
+		regulator-min-microvolt = <1350000>;
+		regulator-max-microvolt = <1350000>;
+
+		regulator-always-on;
+	};
+	
+	vddsd1: vddsd1 {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vddsd1";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	vddsd2: vddsd2 {
+		
+		compatible = "regulator-fixed";
+		regulator-name = "vddsd2";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
 	/* USER CODE END root */
 
 	clocks{
@@ -56,6 +131,34 @@
 &pinctrl {
 
 	/* USER CODE BEGIN pinctrl */
+	sdmmc1_pins_mx: sdmmc1_mx-0 {
+		
+		pins {
+			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+					 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+					 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
+					 <STM32_PINMUX('C', 12, AF12)>, /* SDMMC1_CK */
+					 <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <1>;
+		};
+	};
+
+	uart4_pins_mx: uart4_mx-0 {
+		
+		pins1 {
+			pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+		pins2 {
+			pinmux = <STM32_PINMUX('H', 14, AF8)>; /* UART4_RX */
+			bias-disable;
+		};
+	};
 	/* USER CODE END pinctrl */
 };
 
@@ -63,6 +166,7 @@
 	status = "okay";
 
 	/* USER CODE BEGIN bsec */
+	
 	/* USER CODE END bsec */
 };
 
@@ -72,6 +176,7 @@
 	/* !!! log : Warning - No dma master found  !!! */
 
 	/* USER CODE BEGIN dmamux1 */
+	
 	/* USER CODE END dmamux1 */
 };
 
@@ -79,6 +184,7 @@
 	status = "okay";
 
 	/* USER CODE BEGIN mdma */
+	
 	/* USER CODE END mdma */
 };
 
@@ -86,9 +192,44 @@
 	status = "okay";
 
 	/* USER CODE BEGIN rcc */
+	
 	/* USER CODE END rcc */
 };
 
 /* USER CODE BEGIN addons */
+&uart4 {
+	
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_pins_mx>;
+	status = "okay";
+};
+
+&sdmmc1 {
+	
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc1_pins_mx>;
+    disable-wp;
+    st,neg-edge;
+    bus-width = <4>;
+    vmmc-supply = <&vdd>;
+	status = "okay";
+
+};
+
+&uart4_pins_mx {
+	bootph-all;
+	pins1 {
+		bootph-all;
+	};
+	pins2 {
+		bootph-all;
+	};
+};
+
+&iwdg1 {
+    bootph-all;
+    timeout-sec = <32>;
+    status = "okay";
+};
 /* USER CODE END addons */
 
