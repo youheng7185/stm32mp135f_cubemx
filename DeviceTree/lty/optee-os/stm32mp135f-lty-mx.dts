@@ -17,6 +17,8 @@
 #include "stm32mp13xf.dtsi"
 
 /* USER CODE BEGIN includes */
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/gpio/stm32mp_gpio.h>
 #include <dt-bindings/soc/stm32mp-provisioning.h>
 #include <dt-bindings/soc/stm32mp-tzc400-macro.h>
 #include <dt-bindings/soc/stm32mp13-tzc400.h>
@@ -440,5 +442,14 @@
     pinctrl-0 = <&uart4_pins_mx>;
     status = "okay";
 };
+
+// uart for linux and uboot
+//&gpioa {
+//	st,protreg = < (TZPROT(9)) >;
+//};
+//
+//&gpioh {
+//	st,protreg = < (TZPROT(14)) >;
+//};
 /* USER CODE END addons */
 
