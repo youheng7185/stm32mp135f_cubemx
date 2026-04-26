@@ -48,7 +48,7 @@
         stdout-path = "serial0:115200n8";
     };	
     
-  	/* USER CODE END root */
+	/* USER CODE END root */
 
 	clocks {
 		/* USER CODE BEGIN clocks */
@@ -94,6 +94,19 @@
 			bias-disable;
 			drive-push-pull;
 			slew-rate = <1>;
+		};
+	};
+
+	uart4_pins_mx: uart4_mx-0 {
+		pins1 {
+			pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
+			bias-disable;
+			drive-push-pull;
+			slew-rate = <0>;
+		};
+		pins2 {
+			pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
+			bias-disable;
 		};
 	};
 
@@ -273,6 +286,8 @@
 };
 
 &uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_pins_mx>;
 	status = "okay";
 
 	/* USER CODE BEGIN uart4 */

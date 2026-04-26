@@ -16,6 +16,11 @@
 
 /* USER CODE BEGIN includes */
 #include "stm32mp135f-lty-mx-u-boot.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
+#include <dt-bindings/pwm/pwm.h>
+#include <dt-bindings/rtc/rtc-stm32.h>
 /* USER CODE END includes */
 
 / {
@@ -37,86 +42,59 @@
 
 		/* USER CODE BEGIN reserved-memory */
 		optee@de000000 {
-	        reg = <0xde000000 0x02000000>;
-	        no-map;
-	    };
+			reg = <0xde000000 0x02000000>;
+			no-map;
+		};
 		/* USER CODE END reserved-memory */
 	};
 
 	/* USER CODE BEGIN root */
-    aliases {
-        serial0 = &uart4;
-        mmc0 = &sdmmc1;
-    };
-
-    chosen {
-        stdout-path = "serial0:115200n8";
-    };	
-    
-    vdd: vdd {
-    	
-		compatible = "regulator-fixed";
-		regulator-name = "vdd";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};
-
-	vdd_io: vdd_io {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vdd_io";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
+	arm_wdt: watchdog {
+		compatible = "arm,smc-wdt";
+		arm,smc-id = <0xbc000000>;
+		status = "disabled";
 	};
 	
-	vdd_adc: vdd_adc {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vdd_adc";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
+	aliases {
+		serial0 = &uart4;
+		mmc0 = &sdmmc1;
 	};
 
-	vdd_usb: vdd_usb {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vdd_usb";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
+	chosen {
+		stdout-path = "serial0:115200n8";
 	};
 	
-	vddcore: regulator-vddcore {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vddcore";
+	vdd: vdd {
+			compatible = "regulator-fixed";
+			regulator-name = "vdd";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
 
-		regulator-min-microvolt = <1350000>;
-		regulator-max-microvolt = <1350000>;
+		vdd_usb: vdd_usb {
+			compatible = "regulator-fixed";
+			regulator-name = "vdd_usb";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
 
-		regulator-always-on;
-	};
-	
-	vddsd1: vddsd1 {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vddsd1";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};
+		vdd_adc: vdd_adc {
+			compatible = "regulator-fixed";
+			regulator-name = "vdd_adc";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
 
-	vddsd2: vddsd2 {
-		
-		compatible = "regulator-fixed";
-		regulator-name = "vddsd2";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-	};
+		vddcore: vddcore {
+			compatible = "regulator-fixed";
+			regulator-name = "vddcore";
+			regulator-min-microvolt = <1250000>;
+			regulator-max-microvolt = <1250000>;
+			regulator-always-on;
+		};
 
 	/* USER CODE END root */
 
@@ -131,53 +109,38 @@
 &pinctrl {
 
 	/* USER CODE BEGIN pinctrl */
-	sdmmc1_pins_mx: sdmmc1_mx-0 {
-		
-		pins {
-			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
-					 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
-					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
-					 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
-					 <STM32_PINMUX('C', 12, AF12)>, /* SDMMC1_CK */
-					 <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
-			bias-disable;
-			drive-push-pull;
-			slew-rate = <1>;
-		};
-	};
-
 	uart4_pins_mx: uart4_mx-0 {
-		pins1 {
-			pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
-			bias-disable;
-			drive-push-pull;
-			slew-rate = <0>;
+			pins1 {
+				pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
+				bias-disable;
+				drive-push-pull;
+				slew-rate = <0>;
+			};
+			pins2 {
+				pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
+				bias-disable;
+			};
 		};
-		pins2 {
-			pinmux = <STM32_PINMUX('H', 14, AF8)>; /* UART4_RX */
-			bias-disable;
+		
+		uart4_idle_pins_mx: uart4_idle_mx-0 {
+			pins1 {
+				pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
+				bias-disable;
+				drive-push-pull;
+				slew-rate = <0>;
+			};
+			pins2 {
+				pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
+				bias-disable;
+			};
 		};
-	};
-	
-	uart4_idle_pins_mx: uart4_idle_mx-0 {
-		pins1 {
-			pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
-			bias-disable;
-			drive-push-pull;
-			slew-rate = <0>;
+		
+		uart4_sleep_pins_mx: uart4_sleep_mx-0 {
+			pins {
+				pinmux = <STM32_PINMUX('D', 6, ANALOG)>, /* UART4_TX */
+						 <STM32_PINMUX('D', 8, ANALOG)>; /* UART4_RX */
+			};
 		};
-		pins2 {
-			pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
-			bias-disable;
-		};
-	};
-	
-	uart4_sleep_pins_mx: uart4_sleep_mx-0 {
-		pins {
-			pinmux = <STM32_PINMUX('D', 6, ANALOG)>, /* UART4_TX */
-					 <STM32_PINMUX('D', 8, ANALOG)>; /* UART4_RX */
-		};
-	};
 	
 	sdmmc1_pins_mx: sdmmc1_mx-0 {
 		pins {
@@ -229,7 +192,6 @@
 	status = "okay";
 
 	/* USER CODE BEGIN bsec */
-	
 	/* USER CODE END bsec */
 };
 
@@ -239,7 +201,8 @@
 	/* !!! log : Warning - No dma master found  !!! */
 
 	/* USER CODE BEGIN dmamux1 */
-	
+	dma-masters = <&dma1 &dma2>;
+	dma-channels = <16>;
 	/* USER CODE END dmamux1 */
 };
 
@@ -247,7 +210,6 @@
 	status = "okay";
 
 	/* USER CODE BEGIN mdma */
-	
 	/* USER CODE END mdma */
 };
 
@@ -255,11 +217,59 @@
 	status = "okay";
 
 	/* USER CODE BEGIN rcc */
-	
 	/* USER CODE END rcc */
 };
 
 /* USER CODE BEGIN addons */
+&arm_wdt {
+	timeout-sec = <32>;
+	status = "okay";
+};
+
+&cpu0 {
+	cpu-supply = <&vddcore>;
+};
+
+&dma1 {
+	status = "okay";
+};
+
+&dma2 {
+	status = "okay";
+};
+
+//&etzpc {
+//	status = "okay";
+//	st,decprot = <
+//		DECPROT(STM32MP1_ETZPC_DDRCTRLPHY_ID, DECPROT_NS_R_S_W, DECPROT_LOCK)
+//		DECPROT(STM32MP1_ETZPC_HASH_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_IWDG1_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_PKA_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_RNG_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_SAES_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_STGENC_ID, DECPROT_S_RW, DECPROT_UNLOCK)
+//		DECPROT(STM32MP1_ETZPC_SDMMC1_ID, DECPROT_NS_RW, DECPROT_UNLOCK)
+//	>;
+//};
+
+&rcc {
+	status = "okay";
+};
+
+&sdmmc1 {
+    pinctrl-names = "default", "opendrain", "sleep";
+    pinctrl-0 = <&sdmmc1_pins_mx>;
+    pinctrl-1 = <&sdmmc1_opendrain_pins_mx>;
+    pinctrl-2 = <&sdmmc1_sleep_pins_mx>;
+
+    disable-wp;
+    st,neg-edge;
+    bus-width = <4>;
+    vmmc-supply = <&vdd>;   // yours is fine if regulator exists
+
+    status = "okay";
+};
+
 &uart4 {
 	pinctrl-names = "default", "idle", "sleep";
 	pinctrl-0 = <&uart4_pins_mx>;
@@ -272,39 +282,18 @@
 	status = "okay";
 };
 
-&sdmmc1 {
-	pinctrl-names = "default", "opendrain", "sleep";
-	pinctrl-0 = <&sdmmc1_pins_mx>;
-	pinctrl-1 = <&sdmmc1_opendrain_pins_mx>;
-	pinctrl-2 = <&sdmmc1_sleep_pins_mx>;
-	
-    disable-wp;
-    st,neg-edge;
-    bus-width = <4>;
-    vmmc-supply = <&vdd>;
+&usbphyc {
 	status = "okay";
-
 };
 
-&uart4_pins_mx {
-	bootph-all;
-	pins1 {
-		bootph-all;
-	};
-	pins2 {
-		bootph-all;
-	};
+&usbphyc_port0 {
+	status = "okay";
+	phy-supply = <&vdd_usb>;
 };
 
-//&iwdg1 {
-//    bootph-all;
-//    timeout-sec = <32>;
-//    status = "okay";
-//};
-
-&etzpc {
-    bootph-all;
-    status = "okay";
+&usbphyc_port1 {
+	status = "okay";
+	phy-supply = <&vdd_usb>;
 };
 /* USER CODE END addons */
 
