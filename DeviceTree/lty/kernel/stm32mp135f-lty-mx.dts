@@ -307,6 +307,20 @@
 	/* USER CODE END rcc */
 };
 
+&usbh_ehci {
+	status = "okay";
+
+	/* USER CODE BEGIN usbh_ehci */
+	/* USER CODE END usbh_ehci */
+};
+
+&usbh_ohci {
+	status = "okay";
+
+	/* USER CODE BEGIN usbh_ohci */
+	/* USER CODE END usbh_ohci */
+};
+
 &usbphyc {
 	status = "okay";
 

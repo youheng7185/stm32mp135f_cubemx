@@ -20,7 +20,6 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/pwm/pwm.h>
 #include <dt-bindings/rtc/rtc-stm32.h>
-#include "stm32mp135f-lty-mx-u-boot.dtsi"
 /* USER CODE END includes */
 
 / {
@@ -49,13 +48,6 @@
 	};
 
 	/* USER CODE BEGIN root */
-
-	arm_wdt: watchdog {
-		compatible = "arm,smc-wdt";
-		arm,smc-id = <0xbc000000>;
-		status = "disabled";
-	};
-	
 	aliases {
 		serial0 = &uart4;
 		mmc0 = &sdmmc1;
@@ -81,6 +73,14 @@
 		regulator-always-on;
 	};
 
+	vdd_usb_5v: vdd_usb_5v {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_usb_5v";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+	};
+	
 	vdd_adc: vdd_adc {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_adc";
@@ -96,7 +96,26 @@
 		regulator-max-microvolt = <1250000>;
 		regulator-always-on;
 	};
-		
+	
+    sound {
+        compatible = "simple-audio-card";
+        simple-audio-card,name = "pcm5102-audio";
+        simple-audio-card,format = "i2s";
+
+        simple-audio-card,cpu {
+            sound-dai = <&i2s3>;
+        };
+
+        simple-audio-card,codec {
+            sound-dai = <&pcm5102>;
+        };
+    };
+
+    pcm5102: pcm5102 {
+        compatible = "ti,pcm5102a";
+        #sound-dai-cells = <0>;
+    };
+    
 	/* USER CODE END root */
 
 	clocks{
@@ -150,13 +169,13 @@
 	/* USER CODE BEGIN pinctrl */
 	uart4_pins_mx: uart4_mx-0 {
 			pins1 {
-				pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
+				pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
 				bias-disable;
 				drive-push-pull;
 				slew-rate = <0>;
 			};
 			pins2 {
-				pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
+				pinmux = <STM32_PINMUX('H', 14, AF8)>; /* UART4_RX */
 				bias-disable;
 			};
 		};
@@ -252,6 +271,11 @@
 	status = "okay";
 
 	/* USER CODE BEGIN i2c3 */
+	i2c-scl-rising-time-ns = <96>;
+	i2c-scl-falling-time-ns = <3>;
+	clock-frequency = <1000000>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	/* USER CODE END i2c3 */
 };
 
@@ -262,6 +286,10 @@
 	status = "okay";
 
 	/* USER CODE BEGIN i2s3 */
+	#sound-dai-cells = <0>;
+
+    clocks = <&rcc SPI3>, <&rcc SPI3_K>, <&rcc CK_MCO1>;
+    clock-names = "pclk", "i2sclk", "x8k";
 	/* USER CODE END i2s3 */
 };
 
@@ -332,20 +360,6 @@
 	status = "okay";
 };
 
-//&etzpc {
-//	status = "okay";
-//	st,decprot = <
-//		DECPROT(STM32MP1_ETZPC_DDRCTRLPHY_ID, DECPROT_NS_R_S_W, DECPROT_LOCK)
-//		DECPROT(STM32MP1_ETZPC_HASH_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_IWDG1_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_PKA_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_RNG_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_SAES_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_STGENC_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_SDMMC1_ID, DECPROT_NS_RW, DECPROT_UNLOCK)
-//	>;
-//};
-
 &rcc {
 	status = "okay";
 };
@@ -376,18 +390,5 @@
 	status = "okay";
 };
 
-&usbphyc {
-	status = "okay";
-};
-
-&usbphyc_port0 {
-	status = "okay";
-	phy-supply = <&vdd_usb>;
-};
-
-&usbphyc_port1 {
-	status = "okay";
-	phy-supply = <&vdd_usb>;
-};
 /* USER CODE END addons */
 

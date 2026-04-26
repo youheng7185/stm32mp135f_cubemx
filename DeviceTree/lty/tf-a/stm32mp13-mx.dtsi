@@ -14,7 +14,7 @@
  * Relaxed Timing Mode: true
  * Address mapping type: RBC
  *
- * Save Date: 2026.04.26, save Time: 17:45:43
+ * Save Date: 2026.04.26, save Time: 20:31:26
  */
 
 #define DDR_MEM_NAME "DDR3-DDR3L 16bits 528000kHz"
