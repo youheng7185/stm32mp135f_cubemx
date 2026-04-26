@@ -20,6 +20,7 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/pwm/pwm.h>
 #include <dt-bindings/rtc/rtc-stm32.h>
+#include "stm32mp135f-lty-mx-u-boot.dtsi"
 /* USER CODE END includes */
 
 / {
@@ -48,6 +49,13 @@
 	};
 
 	/* USER CODE BEGIN root */
+
+	arm_wdt: watchdog {
+		compatible = "arm,smc-wdt";
+		arm,smc-id = <0xbc000000>;
+		status = "disabled";
+	};
+	
 	aliases {
 		serial0 = &uart4;
 		mmc0 = &sdmmc1;
@@ -142,13 +150,13 @@
 	/* USER CODE BEGIN pinctrl */
 	uart4_pins_mx: uart4_mx-0 {
 			pins1 {
-				pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
+				pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
 				bias-disable;
 				drive-push-pull;
 				slew-rate = <0>;
 			};
 			pins2 {
-				pinmux = <STM32_PINMUX('H', 14, AF8)>; /* UART4_RX */
+				pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
 				bias-disable;
 			};
 		};
