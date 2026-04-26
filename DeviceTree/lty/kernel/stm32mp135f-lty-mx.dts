@@ -73,6 +73,14 @@
 		regulator-always-on;
 	};
 
+	vdd_usb_5v: vdd_usb_5v {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_usb_5v";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+	};
+	
 	vdd_adc: vdd_adc {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_adc";
@@ -88,6 +96,26 @@
 		regulator-max-microvolt = <1250000>;
 		regulator-always-on;
 	};
+	
+    sound {
+        compatible = "simple-audio-card";
+        simple-audio-card,name = "pcm5102-audio";
+        simple-audio-card,format = "i2s";
+
+        simple-audio-card,cpu {
+            sound-dai = <&i2s3>;
+        };
+
+        simple-audio-card,codec {
+            sound-dai = <&pcm5102>;
+        };
+    };
+
+    pcm5102: pcm5102 {
+        compatible = "ti,pcm5102a";
+        #sound-dai-cells = <0>;
+    };
+    
 	/* USER CODE END root */
 
 	clocks{
@@ -258,6 +286,10 @@
 	status = "okay";
 
 	/* USER CODE BEGIN i2s3 */
+	#sound-dai-cells = <0>;
+
+    clocks = <&rcc SPI3>, <&rcc SPI3_K>, <&rcc CK_MCO1>;
+    clock-names = "pclk", "i2sclk", "x8k";
 	/* USER CODE END i2s3 */
 };
 
@@ -275,24 +307,6 @@
 	/* USER CODE END rcc */
 };
 
-&usbh_ehci {
-	status = "okay";
-
-	/* USER CODE BEGIN usbh_ehci */
-	phys = <&usbphyc_port0>;
-	phy-names = "usb";
-	/* USER CODE END usbh_ehci */
-};
-
-&usbh_ohci {
-	status = "okay";
-
-	/* USER CODE BEGIN usbh_ohci */
-	phys = <&usbphyc_port0>;
-	phy-names = "usb";
-	/* USER CODE END usbh_ohci */
-};
-
 &usbphyc {
 	status = "okay";
 
@@ -304,17 +318,6 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbphyc_port0 */
-	phy-supply = <&vdd_usb>;
-	st,current-boost-microamp = <1000>;
-	st,decrease-hs-slew-rate;
-	st,tune-hs-dc-level = <2>;
-	st,enable-hs-rftime-reduction;
-	st,trim-hs-current = <11>;
-	st,trim-hs-impedance = <2>;
-	st,tune-squelch-level = <1>;
-	st,enable-hs-rx-gain-eq;
-	st,no-hs-ftime-ctrl;
-	st,no-lsfs-sc;
 	/* USER CODE END usbphyc_port0 */
 };
 
