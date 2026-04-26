@@ -88,7 +88,6 @@
 		regulator-max-microvolt = <1250000>;
 		regulator-always-on;
 	};
-		
 	/* USER CODE END root */
 
 	clocks{
@@ -244,6 +243,11 @@
 	status = "okay";
 
 	/* USER CODE BEGIN i2c3 */
+	i2c-scl-rising-time-ns = <96>;
+	i2c-scl-falling-time-ns = <3>;
+	clock-frequency = <1000000>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 	/* USER CODE END i2c3 */
 };
 
@@ -275,6 +279,8 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbh_ehci */
+	phys = <&usbphyc_port0>;
+	phy-names = "usb";
 	/* USER CODE END usbh_ehci */
 };
 
@@ -282,6 +288,8 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbh_ohci */
+	phys = <&usbphyc_port0>;
+	phy-names = "usb";
 	/* USER CODE END usbh_ohci */
 };
 
@@ -296,6 +304,17 @@
 	status = "okay";
 
 	/* USER CODE BEGIN usbphyc_port0 */
+	phy-supply = <&vdd_usb>;
+	st,current-boost-microamp = <1000>;
+	st,decrease-hs-slew-rate;
+	st,tune-hs-dc-level = <2>;
+	st,enable-hs-rftime-reduction;
+	st,trim-hs-current = <11>;
+	st,trim-hs-impedance = <2>;
+	st,tune-squelch-level = <1>;
+	st,enable-hs-rx-gain-eq;
+	st,no-hs-ftime-ctrl;
+	st,no-lsfs-sc;
 	/* USER CODE END usbphyc_port0 */
 };
 
@@ -323,20 +342,6 @@
 &dma2 {
 	status = "okay";
 };
-
-//&etzpc {
-//	status = "okay";
-//	st,decprot = <
-//		DECPROT(STM32MP1_ETZPC_DDRCTRLPHY_ID, DECPROT_NS_R_S_W, DECPROT_LOCK)
-//		DECPROT(STM32MP1_ETZPC_HASH_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_IWDG1_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_PKA_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_RNG_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_SAES_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_STGENC_ID, DECPROT_S_RW, DECPROT_UNLOCK)
-//		DECPROT(STM32MP1_ETZPC_SDMMC1_ID, DECPROT_NS_RW, DECPROT_UNLOCK)
-//	>;
-//};
 
 &rcc {
 	status = "okay";
@@ -368,18 +373,5 @@
 	status = "okay";
 };
 
-&usbphyc {
-	status = "okay";
-};
-
-&usbphyc_port0 {
-	status = "okay";
-	phy-supply = <&vdd_usb>;
-};
-
-&usbphyc_port1 {
-	status = "okay";
-	phy-supply = <&vdd_usb>;
-};
 /* USER CODE END addons */
 
