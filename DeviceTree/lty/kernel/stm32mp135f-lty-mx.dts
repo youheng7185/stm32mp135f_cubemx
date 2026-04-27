@@ -288,8 +288,8 @@
 	/* USER CODE BEGIN i2s3 */
 	#sound-dai-cells = <0>;
 
-    clocks = <&rcc SPI3>, <&rcc SPI3_K>, <&rcc CK_MCO1>;
-    clock-names = "pclk", "i2sclk", "x8k";
+    clocks = <&rcc SPI3>, <&rcc SPI3_K>, <&rcc PLL4_P>, <&rcc PLL4_P>;
+    clock-names = "pclk", "i2sclk", "x8k", "x11k";
 	/* USER CODE END i2s3 */
 };
 

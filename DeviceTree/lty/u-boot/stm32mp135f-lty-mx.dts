@@ -57,6 +57,12 @@
 		stdout-path = "serial0:115200n8";
 	};
 	
+	arm_wdt: watchdog {
+		compatible = "arm,smc-wdt";
+		arm,smc-id = <0xbc000000>;
+		status = "disabled";
+	};
+	
 	vdd: vdd {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd";
@@ -169,13 +175,13 @@
 	/* USER CODE BEGIN pinctrl */
 	uart4_pins_mx: uart4_mx-0 {
 			pins1 {
-				pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
+				pinmux = <STM32_PINMUX('D', 6, AF8)>; /* UART4_TX */
 				bias-disable;
 				drive-push-pull;
 				slew-rate = <0>;
 			};
 			pins2 {
-				pinmux = <STM32_PINMUX('H', 14, AF8)>; /* UART4_RX */
+				pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
 				bias-disable;
 			};
 		};
